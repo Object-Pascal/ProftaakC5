@@ -1,33 +1,34 @@
 import TI.*;
+import sun.misc.SignalHandler;
 
 
 public class RobotMain {
 
     public static void main(String[] args) {
-        Timer timerUltrasone = new Timer(75);
-        Timer timerInfrared = new Timer(10);
-        ServoController servos = new ServoController();
-        Ultrasone ultrasone = new Ultrasone();
+        Timer timerUltrasone = new Timer(100);
+        Timer timerInfrared = new Timer(25);
+        Ultrasone ultrasone = new Ultrasone(timerUltrasone);
+        ServoController servos = new ServoController(ultrasone);
         LedControl ledControl = new LedControl();
-
+        Infrared infrared = new Infrared(35);
         servos.startBot();
-
         //system loop
-        while(true) {
-            //on off method
-            if(useInfrared.turnOnBot && !servos.on_off){
-                servos.on_off = true;
-            }
-            //software loop
-            while (servos.on_off) {
-                if (timerUltrasone.timeout()) {
-                    if (Ultrasone.echoLocation() < 10) {
-                        servos.stopBot();
+        while (true) {
+            BoeBot.wait(1);
+            infrared.useInfrared(servos, timerInfrared);
+            if (timerUltrasone.timeout()) {
+                int tempLocation = ultrasone.echoLocation();
+                if (tempLocation < 10) {
+                    servos.stopBot();
+                    servos.turnLeft90();
+                    tempLocation = ultrasone.echoLocation();
+                    if(tempLocation > 10) {
+                        servos.startBot();
                     }
                 }
-                //anti crash delay
-                BoeBot.wait(1);
             }
+
+
         }
     }
 }

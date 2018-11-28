@@ -9,16 +9,18 @@ private Servo leftWheel = new Servo(12);
 private Servo rightWheel = new Servo(13);
 public boolean on_off;
 private int first,second;
+private Ultrasone ultrasone;
 
-    public ServoController(){
+    public ServoController(Ultrasone ultrasone){
         this.on_off = true;
         leftWheel.update(1500);
         rightWheel.update(1500);
+        this.ultrasone = ultrasone;
     }
 
     public void stopBot(){
-        leftWheel.stop();
-        rightWheel.stop();
+        leftWheel.update(1500);
+        rightWheel.update(1500);
     }
 
     public void startBot() {
@@ -41,12 +43,13 @@ private int first,second;
     }
 
     public void accelerate() {
-        for (int i = 0; i <= 200; i++) {
+        for (int i = 0; i <= 25; i++) {
             rightWheel.update(1500 - i);
             leftWheel.update(1500 + i);
-            BoeBot.wait(20);
+            BoeBot.wait(10);
             }
         }
+
 
     public void convert(int degree) {
         degree = degree * 16667;
@@ -63,7 +66,6 @@ private int first,second;
 
         convert(degree);
         for (int i = 0; i < first * 10; i++) {
-            Ultrasone.echoLocation();
             BoeBot.wait(first / 10, second / 10);
         }
         startBot();
@@ -76,15 +78,37 @@ private int first,second;
 
         convert(degree);
         for (int i = 0; i < first * 10; i++) {
-            Ultrasone.echoLocation();
             BoeBot.wait(first / 10, second / 10);
         }
         startBot();
     }
 
+    public void spinLeft(){
+        rightWheel.update(1300);
+        leftWheel.update(1300);
+    }
+
+    public void spinRight(){
+        rightWheel.update(1700);
+        leftWheel.update(1700);
+    }
+
     public void turnOffBot(){
         stopBot();
         this.on_off = false;
+    }
+
+    public void speed25(){
+        rightWheel.update(1450);
+        leftWheel.update(1550);
+    }
+    public void speed50(){
+        rightWheel.update(1400);
+        leftWheel.update(1600);
+    }
+    public void speed100(){
+        rightWheel.update(1700);
+        leftWheel.update(1300);
     }
     }
 
