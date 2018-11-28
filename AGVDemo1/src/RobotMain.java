@@ -15,9 +15,9 @@ public class RobotMain {
         //system loop
         while(true) {
             //on off method
-            //if(useInfrared.turnOnBot && !servos.on_off){
+            if(useInfrared.turnOnBot && !servos.on_off){
                 servos.on_off = true;
-            //}
+            }
             //software loop
             while (servos.on_off) {
                 if (timerUltrasone.timeout()) {
