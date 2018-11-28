@@ -11,13 +11,23 @@ public class RobotMain {
         LedControl ledControl = new LedControl();
 
         servos.startBot();
+
+        //system loop
         while(true) {
-            if (timerUltrasone.timeout()) {
-                if(Ultrasone.echoLocation() < 10){
-                    servos.stopBot();
+            //on off method
+            //if(useInfrared.turnOnBot && !servos.on_off){
+                servos.on_off = true;
+            //}
+            //software loop
+            while (servos.on_off) {
+                if (timerUltrasone.timeout()) {
+                    if (Ultrasone.echoLocation() < 10) {
+                        servos.stopBot();
+                    }
                 }
+                //anti crash delay
+                BoeBot.wait(1);
             }
-            BoeBot.wait(1);
         }
     }
 }

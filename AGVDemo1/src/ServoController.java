@@ -25,14 +25,14 @@ private int first,second;
         accelerate();
     }
 
-    public void turnLeft(){
+    public void turnLeft90(){
         stopBot();
-        rightWheel.update(1700);
+        turnLeft(90);
     }
 
-    public void turnRight() {
+    public void turnRight90() {
         stopBot();
-        leftWheel.update(1700);
+        turnRight(90);
     }
 
     public void moveBackwards(){
@@ -80,6 +80,11 @@ private int first,second;
             BoeBot.wait(first / 10, second / 10);
         }
         startBot();
+    }
+
+    public void turnOffBot(){
+        stopBot();
+        this.on_off = false;
     }
     }
 
