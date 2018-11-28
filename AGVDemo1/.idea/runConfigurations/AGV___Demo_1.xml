@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="AGV - Demo 1" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="RobotMain" />
-    <module name="AGV - Demo 1" />
+    <module name="AGVDemo1" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

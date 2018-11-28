@@ -22,7 +22,7 @@ private int first,second;
     }
 
     public void startBot() {
-
+        accelerate();
     }
 
     public void turnLeft(){
@@ -40,14 +40,6 @@ private int first,second;
         leftWheel.update(1300);
     }
 
-    public void echoLocation() {
-        BoeBot.digitalWrite(5, true);
-        BoeBot.wait(0, 800);
-        BoeBot.digitalWrite(5, false);
-        int length = BoeBot.pulseIn(6, true, 10000) / 58;
-        System.out.println(length);
-        BoeBot.wait(50);
-    }
     public void accelerate() {
         for (int i = 0; i <= 200; i++) {
             rightWheel.update(1500 - i);
@@ -71,7 +63,7 @@ private int first,second;
 
         convert(degree);
         for (int i = 0; i < first * 10; i++) {
-            echoLocation();
+            Ultrasone.echoLocation();
             BoeBot.wait(first / 10, second / 10);
         }
         startBot();
@@ -84,7 +76,7 @@ private int first,second;
 
         convert(degree);
         for (int i = 0; i < first * 10; i++) {
-            echoLocation();
+            Ultrasone.echoLocation();
             BoeBot.wait(first / 10, second / 10);
         }
         startBot();
