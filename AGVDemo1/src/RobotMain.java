@@ -9,17 +9,19 @@ public class RobotMain {
         ServoController servos = new ServoController();
         Ultrasone ultrasone = new Ultrasone();
         LedControl ledControl = new LedControl();
+        Infrared infrared = new Infrared();
 
         servos.startBot();
 
         //system loop
         while(true) {
             //on off method
-            //if(useInfrared.turnOnBot && !servos.on_off){
+            if(infrared.turnOnBot() && !servos.on_off){
                 servos.on_off = true;
-            //}
+            }
             //software loop
             while (servos.on_off) {
+                infrared.useInfrared();
                 if (timerUltrasone.timeout()) {
                     if (Ultrasone.echoLocation() < 10) {
                         servos.stopBot();
