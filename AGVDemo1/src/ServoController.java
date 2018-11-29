@@ -43,10 +43,10 @@ private Ultrasone ultrasone;
     }
 
     public void accelerate() {
-        for (int i = 0; i <= 25; i++) {
+        for (int i = 0; i <= 200; i++) {
             rightWheel.update(1500 - i);
             leftWheel.update(1500 + i);
-            BoeBot.wait(10);
+            BoeBot.wait(5);
             }
         }
 
@@ -107,8 +107,42 @@ private Ultrasone ultrasone;
         leftWheel.update(1600);
     }
     public void speed100(){
-        rightWheel.update(1700);
-        leftWheel.update(1300);
+        rightWheel.update(1300);
+        leftWheel.update(1700);
+    }
+    public void figure(){
+        //First smal spin right
+        spinRight();
+        convert(45);
+        BoeBot.wait(first,second);
+
+        //Forward for 1 sec first line
+        startBot();
+        BoeBot.wait(1,0);
+
+        //Turn left with 135 degree
+        spinLeft();
+        convert(135);
+        BoeBot.wait(first,second);
+
+        //Forward for 1 sec second line
+        startBot();
+        BoeBot.wait(1,0);
+
+        //Turn left with 135 degree
+        spinLeft();
+        convert(135);
+        BoeBot.wait(first,second);
+
+        //Forward for 1 sec third line
+        startBot();
+        BoeBot.wait(1,0);
+
+        //Last turn to be back on first position
+        spinLeft();
+        convert(135);
+        BoeBot.wait(first,second);
+        stopBot();
     }
     }
 

@@ -11,10 +11,14 @@ private boolean hasStopped;
         this.hasStopped = false;
     }
 
-    public void echoLocation(ServoController servoController) {
+    public void echoLocation(ServoController servoController,LedControl ledControl) {
             int length;
                 length = getValue();
                 BoeBot.wait(1);
+
+                if(length < 10){
+                        ledControl.alarmLights();
+                }
                 if (length < 10&&!this.hasStopped && length>0) {
                     servoController.stopBot();
                     this.hasStopped=true;

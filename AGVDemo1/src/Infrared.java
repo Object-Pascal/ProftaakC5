@@ -30,7 +30,7 @@ public class Infrared {
         return 999;
     }
 
-    public void useInfrared(ServoController servos) {
+    public void useInfrared(ServoController servos,LedControl ledControl) {
             int pulse = getSignal();
             if (pulse == 155) {
                 System.out.println("Left");
@@ -48,6 +48,8 @@ public class Infrared {
                 System.out.println("On/Off");
                 if(this.stopped){
                     System.out.println("start");
+                    ledControl.setLedsOff();
+                    ledControl.setLedsGreen();
                     servos.startBot();
                     this.stopped = false;
                 }
@@ -55,6 +57,9 @@ public class Infrared {
                     System.out.println("stop");
                     servos.stopBot();
                     this.stopped = true;
+                    ledControl.setLedsOff();
+                    ledControl.setLedsRed();
+                    BoeBot.wait(750);
                 }
             } else if (pulse == 128) {
                 System.out.println("Number 1");
@@ -67,7 +72,7 @@ public class Infrared {
                 servos.speed100();
             } else if (pulse == 137) {
                 System.out.println("Number 0");
-                ///hier moet figure nog komen!
+                servos.figure();
             }
         }
     }

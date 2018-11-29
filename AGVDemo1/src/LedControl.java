@@ -14,7 +14,7 @@ public class LedControl {
 
     public void alarmLights(){
         for (int i = 0; i < 6; i++) {
-            BoeBot.rgbSet(i,150,0,0);
+            BoeBot.rgbSet(i,75,0,0);
         }
         BoeBot.rgbShow();
     }
@@ -28,6 +28,12 @@ public class LedControl {
     public void setLedsGreen(){
         for (int i = 0; i <6 ; i++) {
             BoeBot.rgbSet(i,0,50,0);
+        }
+        BoeBot.rgbShow();
+    }
+    public void setLedsRed(){
+        for (int i = 0; i <6 ; i++) {
+            BoeBot.rgbSet(i,50,0,0);
         }
         BoeBot.rgbShow();
     }
