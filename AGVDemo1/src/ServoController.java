@@ -52,7 +52,7 @@ private Ultrasone ultrasone;
 
 
     public void convert(int degree) {
-        degree = degree * 16667;
+        degree = degree * 8334;
         int first = (int) Math.floor(degree / 1000000);
         int second = degree % 1000000;
         System.out.println((int) Math.floor(degree / 1000000));
@@ -111,38 +111,35 @@ private Ultrasone ultrasone;
         leftWheel.update(1700);
     }
     public void figure(){
-        //First smal spin right
-        spinRight();
-        convert(45);
-        BoeBot.wait(first,second);
-
-        //Forward for 1 sec first line
+        //Forward for 3 sec first line
         startBot();
-        BoeBot.wait(1,0);
+        BoeBot.wait(1,500000);
 
-        //Turn left with 135 degree
+        //Turn left with 135 degree top angle
         spinLeft();
-        convert(135);
+        convert(90);
         BoeBot.wait(first,second);
 
-        //Forward for 1 sec second line
+        //Forward for 3 sec second line
         startBot();
-        BoeBot.wait(1,0);
+        BoeBot.wait(1,500000);
 
-        //Turn left with 135 degree
+        //Turn left with 135 degree left angle
         spinLeft();
-        convert(135);
+        convert(90);
         BoeBot.wait(first,second);
 
-        //Forward for 1 sec third line
+        //Forward for 3 sec third line
         startBot();
-        BoeBot.wait(1,0);
+        BoeBot.wait(1,500000);
 
-        //Last turn to be back on first position
+
         spinLeft();
-        convert(135);
+        convert(100);
         BoeBot.wait(first,second);
+
         stopBot();
+
     }
     }
 

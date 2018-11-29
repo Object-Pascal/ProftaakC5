@@ -12,8 +12,16 @@ public class RobotMain {
         ServoController servos = new ServoController(ultrasone);
         Infrared infrared = new Infrared();
         ledControl.setLedsGreen();
-        BoeBot.wait(750);
-        servos.startBot();
+
+
+
+
+        //BoeBot.wait(750);
+        //servos.startBot();
+
+
+
+
         ledControl.setLedsOff();
         //system loop
         while (true) {
