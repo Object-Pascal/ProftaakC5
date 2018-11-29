@@ -126,7 +126,7 @@ private Ultrasone ultrasone;
 
         //Turn left with 135 degree left angle
         spinLeft();
-        convert(90);
+        convert(80);
         BoeBot.wait(first,second);
 
         //Forward for 3 sec third line
