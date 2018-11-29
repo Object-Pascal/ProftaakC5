@@ -5,13 +5,12 @@ public class Infrared {
     private Timer timer;
     private boolean stopped;
 
-    public Infrared(int delay){
-        this.timer = new Timer(delay);
+    public Infrared(){
         this.stopped = false;
     }
 
     public int getSignal() { {
-            if (timer.timeout()) {
+        BoeBot.wait(1);
                 int initialPulse = BoeBot.pulseIn(10, false, 6000);
                 if (initialPulse >= 2000) {
                     int lengths[] = new int[12];
@@ -28,12 +27,10 @@ public class Infrared {
                     }
                 }
             }
-        }
         return 999;
     }
 
-    public void useInfrared(ServoController servos, Timer IRtimer) {
-        if (IRtimer.timeout()) {
+    public void useInfrared(ServoController servos) {
             int pulse = getSignal();
             if (pulse == 155) {
                 System.out.println("Left");
@@ -72,9 +69,5 @@ public class Infrared {
                 System.out.println("Number 0");
                 ///hier moet figure nog komen!
             }
-            else{
-                //valse input wordt hierdoor niks mee gedaan.
-            }
         }
     }
-}
