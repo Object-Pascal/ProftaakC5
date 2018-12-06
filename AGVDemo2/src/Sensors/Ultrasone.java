@@ -8,7 +8,6 @@ import java.util.Random;
 
 public class Ultrasone implements Updatable {
 
-    // Step 3
     private UltrasoneUpdate observer;
     private Timer timer = new Timer(100);
 
