@@ -6,10 +6,15 @@ import Interfaces.Updatable;
 public class Servos implements Updatable {
 
 private ServosUpdate observer;
+private int currentSpeed;
 
+
+    public Servos(ServosUpdate observer){
+        this.observer = observer;
+        this.currentSpeed = 0;
+    }
 
     public void update(){
-        System.out.println("Servos werkt");
-        
+        observer.onServosUpdate(this.currentSpeed);
     }
 }

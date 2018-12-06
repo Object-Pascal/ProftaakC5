@@ -1,5 +1,5 @@
 package Interfaces;
 
 public interface ServosUpdate {
-    void onServosUpdate();
+    void onServosUpdate(int currentSpeed);
 }
