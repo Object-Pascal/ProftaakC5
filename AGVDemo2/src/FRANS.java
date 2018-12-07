@@ -11,7 +11,9 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
     private Updatable servos = new Servos(this);
     private Updatable infrared = new Infrared(this);
     private Updatable bluetooth = new Bluetooth(this);
-    private Updatable lineSensor = new LineSensor(this,0,1,2);
+    private Updatable lineSensor1 = new LineSensor(this,0);
+    private Updatable lineSensor2 = new LineSensor(this,1);
+    private Updatable lineSensor3 = new LineSensor(this,2);
 
 private List<Updatable> updatableList = new ArrayList<>();
 
@@ -19,8 +21,8 @@ private List<Updatable> updatableList = new ArrayList<>();
         this.updatableList.add(ultrasone);
         this.updatableList.add(servos);
         //this.updatableList.add(infrared);
-       // this.updatableList.add(bluetooth);
-        this.updatableList.add(lineSensor);
+        this.updatableList.add(bluetooth);
+        //this.updatableList.add(lineSensor1);
         //this.updatableList.add(lineSensor2);
         //this.updatableList.add(lineSensor3);
     }
@@ -33,8 +35,9 @@ private List<Updatable> updatableList = new ArrayList<>();
     }
 
     public void onUltrasoneUpdate(int value) {
-        if(value<10){
-            System.out.println("stopped!");
+        if (value <= 10) {
+            ((Servos)servos).stopBot();
+            System.out.println("Stop bot");
         }
     }
 
@@ -49,7 +52,7 @@ private List<Updatable> updatableList = new ArrayList<>();
     }
 
     public void onLineSensorUpdate(int value){
-
+        System.out.println(value);
     }
 
     public void onBluetoothUpdate(int value) {
