@@ -19,10 +19,10 @@ public class Ultrasone implements Updatable {
     @Override
     public void update() {
         if (timer.timeout()) {
-            BoeBot.digitalWrite(1, true);
+            BoeBot.digitalWrite(5, true);
             BoeBot.wait(0, 800);
-            BoeBot.digitalWrite(1, false);
-            int value = BoeBot.pulseIn(2, true, 10000) / 58;
+            BoeBot.digitalWrite(5, false);
+            int value = BoeBot.pulseIn(6, true, 10000) / 58;
             this.observer.onUltrasoneUpdate(value == 0 ? 40 : value);
         }
     }
