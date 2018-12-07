@@ -1,5 +1,6 @@
 package Sensors;
 
+import Enums.DirectionType;
 import Interfaces.ServosUpdate;
 import Interfaces.Updatable;
 import TI.BoeBot;
@@ -13,11 +14,15 @@ public class Servos implements Updatable {
     private Servo rightWheel = new Servo(13);
     public boolean on_off;
     private int first, second;
+    public boolean objectDetected;
+    public DirectionType currenctDirection;
 
 
     public Servos(ServosUpdate observer){
         this.observer = observer;
         this.currentSpeed = 0;
+        this.objectDetected = false;
+        this.currenctDirection = DirectionType.Stopped;
     }
 
     public void update(){
@@ -34,10 +39,12 @@ public class Servos implements Updatable {
     }
 
     public void accelerate() {
-        for (int i = 0; i <= 200; i++) {
-            rightWheel.update(1500 - i);
-            leftWheel.update(1500 + i);
-            BoeBot.wait(5);
+        if (!objectDetected) {
+            for (int i = 0; i <= 25; i++) {
+                rightWheel.update(1500 + i);
+                leftWheel.update(1500 - i);
+                BoeBot.wait(5);
+            }
         }
     }
 
@@ -79,8 +86,10 @@ public class Servos implements Updatable {
     }
 
     public void speed25(){
-        leftWheel.update(1475);
-        rightWheel.update(1525);
+        if (!objectDetected) {
+            leftWheel.update(1475);
+            rightWheel.update(1525);
+        }
     }
 
     public void convert(int degree) {

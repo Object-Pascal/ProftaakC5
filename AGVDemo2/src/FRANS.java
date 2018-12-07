@@ -1,7 +1,7 @@
+import Enums.DirectionType;
 import Interfaces.*;
 import Sensors.*;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +36,14 @@ private List<Updatable> updatableList = new ArrayList<>();
 
     public void onUltrasoneUpdate(int value) {
         if (value <= 10) {
-            ((Servos)servos).stopBot();
-            System.out.println("Stop bot");
+            if (((Servos)servos).currenctDirection == DirectionType.Forward) {
+                ((Servos)servos).stopBot();
+                ((Servos)servos).objectDetected = true;
+                System.out.println("Object detected");
+            }
+        }
+        else if (value != 40 && value > 10) {
+            ((Servos)servos).objectDetected = false;
         }
     }
 
@@ -58,27 +64,31 @@ private List<Updatable> updatableList = new ArrayList<>();
     public void onBluetoothUpdate(int value) {
         switch (value) {
             case 119:
+                ((Servos)servos).currenctDirection = DirectionType.Forward;
                 System.out.println("Forward");
-                ((Servos)servos).speed25();
+                ((Servos)servos).accelerate();
                 break;
 
             case 115:
+                ((Servos)servos).currenctDirection = DirectionType.Backward;
                 System.out.println("Backward");
                 ((Servos)servos).moveBackwards();
                 break;
 
             case 97:
+                ((Servos)servos).currenctDirection = DirectionType.Left;
                 System.out.println("Left");
                 ((Servos)servos).spinLeft();
                 break;
 
             case 100:
+                ((Servos)servos).currenctDirection = DirectionType.Right;
                 System.out.println("Right");
                 ((Servos)servos).spinRight();
                 break;
 
             case 102:
-                // Right
+                ((Servos)servos).currenctDirection = DirectionType.Stopped;
                 System.out.println("Stop");
                 ((Servos)servos).stopBot();
                 break;
