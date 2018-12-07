@@ -2,6 +2,7 @@ package Sensors;
 
 import Interfaces.UltrasoneUpdate;
 import Interfaces.Updatable;
+import TI.BoeBot;
 import TI.Timer;
 
 import java.util.Random;
@@ -17,6 +18,12 @@ public class Ultrasone implements Updatable {
 
     @Override
     public void update() {
-            this.observer.onUltrasoneUpdate(10);
+        if (timer.timeout()) {
+            BoeBot.digitalWrite(1, true);
+            BoeBot.wait(0, 800);
+            BoeBot.digitalWrite(1, false);
+            int value = BoeBot.pulseIn(2, true, 10000) / 58;
+            this.observer.onUltrasoneUpdate(value == 0 ? 40 : value);
+        }
     }
 }
