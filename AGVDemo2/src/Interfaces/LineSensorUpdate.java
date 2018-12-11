@@ -1,5 +1,5 @@
 package Interfaces;
 
 public interface LineSensorUpdate {
-    void onLineSensorUpdate(int indexlinks, int indexrechts);
+    void onLineSensorUpdate(double indexlinks, double indexrechts);
 }

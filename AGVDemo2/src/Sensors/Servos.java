@@ -101,4 +101,11 @@ public class Servos implements Updatable {
         this.first = first;
         this.second = second;
     }
+
+    public void speedLeft(double indexleft){
+        leftWheel.update((int)(1500+ (200*indexleft)));
+    }
+    public void speedRight(double indexright){
+        rightWheel.update((int)(1500-(200*indexright)));
+    }
 }

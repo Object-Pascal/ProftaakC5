@@ -2,6 +2,7 @@ import Enums.DirectionType;
 import Interfaces.*;
 import Sensors.*;
 import TI.BoeBot;
+import com.sun.xml.internal.ws.developer.SerializationFeature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +18,10 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
 private List<Updatable> updatableList = new ArrayList<>();
 
     public FRANS(){
-        this.updatableList.add(ultrasone);
+        //this.updatableList.add(ultrasone);
         this.updatableList.add(servos);
         this.updatableList.add(infrared);
-        //this.updatableList.add(bluetooth);
+        this.updatableList.add(bluetooth);
         //this.updatableList.add(linesensor);
 
     }
@@ -72,8 +73,23 @@ private List<Updatable> updatableList = new ArrayList<>();
         //System.out.println(value);
     }
 
-    public void onLineSensorUpdate(int links,int rechts){
+    public void onLineSensorUpdate(double left,double right){
+        if(left>0.8 && right>0.8) {
+            ((Servos) servos).speedLeft(right);
+            ((Servos) servos).speedRight(left);
+        }
+        else if(left>0.95){
+            ((Servos) servos).speedLeft(0);
+            return;
+        }
+        else if(right>0.95){
+            ((Servos) servos).speedRight(0);
+            return;
+        }
 
+
+        ((Servos) servos).speedLeft(right);
+        ((Servos) servos).speedRight(left);
     }
 
     public void onBluetoothUpdate(int value) {

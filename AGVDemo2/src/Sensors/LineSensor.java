@@ -11,7 +11,7 @@ public class LineSensor implements Updatable {
     private int pin1;
     private int pin2;
     private int pin3;
-    private Timer timer = new Timer(100);
+    private Timer timer = new Timer(10);
 
     public LineSensor(LineSensorUpdate observer, int pin1,int pin2,int pin3) {
         this.observer = observer;
@@ -24,13 +24,6 @@ public class LineSensor implements Updatable {
         if (timer.timeout()) {
             double right = (BoeBot.analogRead(pin1)-1017)/(double)596;
             double left = ((BoeBot.analogRead(pin2)-900)/(double)676);
-            boolean boost;
-            if(((BoeBot.analogRead(pin3)-857) >= 500) && ((right<0.3)&&(left<0.3))){
-                boost = true;
-            }
-            else{
-                boost = false;
-            }
             /*
             gekalibreerd:
             delta left: 1576 - 900 = 676.
@@ -39,7 +32,7 @@ public class LineSensor implements Updatable {
              */
 
             System.out.println("1: " + left + " | 3: " + right);
-            //observer.onLineSensorUpdate(10);
+            observer.onLineSensorUpdate(left,right);
         }
     }
 }
