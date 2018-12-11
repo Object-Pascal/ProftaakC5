@@ -1,6 +1,7 @@
 import Enums.DirectionType;
 import Interfaces.*;
 import Sensors.*;
+import TI.BoeBot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,22 +10,19 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
 
     private Updatable ultrasone = new Ultrasone(this);
     private Updatable servos = new Servos(this);
-    private Updatable infrared = new Infrared(this);
+    private Updatable infrared = new Infrared(this,15);
     private Updatable bluetooth = new Bluetooth(this);
-    private Updatable lineSensor1 = new LineSensor(this,0);
-    private Updatable lineSensor2 = new LineSensor(this,1);
-    private Updatable lineSensor3 = new LineSensor(this,2);
+    private Updatable  linesensor = new LineSensor(this,0,1,2);
 
 private List<Updatable> updatableList = new ArrayList<>();
 
     public FRANS(){
         this.updatableList.add(ultrasone);
         this.updatableList.add(servos);
-        //this.updatableList.add(infrared);
-        this.updatableList.add(bluetooth);
-        //this.updatableList.add(lineSensor1);
-        //this.updatableList.add(lineSensor2);
-        //this.updatableList.add(lineSensor3);
+        this.updatableList.add(infrared);
+        //this.updatableList.add(bluetooth);
+        //this.updatableList.add(linesensor);
+
     }
 
 
@@ -35,6 +33,7 @@ private List<Updatable> updatableList = new ArrayList<>();
     }
 
     public void onUltrasoneUpdate(int value) {
+        System.out.println(value);
         if (value <= 10) {
             if (((Servos)servos).currenctDirection == DirectionType.Forward) {
                 ((Servos)servos).stopBot();
@@ -42,14 +41,30 @@ private List<Updatable> updatableList = new ArrayList<>();
                 System.out.println("Object detected");
             }
         }
-        else if (value != 40 && value > 10) {
+        else if (value != 40) {
             ((Servos)servos).objectDetected = false;
         }
     }
 
     public void onInfraredUpdate(int value) {
-        if(value <= 100){
-            System.out.println("input afstandsbediening werkt");
+        if (value < 999) {
+            if (value == 158) {
+                System.out.println("Naar voren");
+            } else if (value == 154) {
+                System.out.println("Naar rechts");
+            } else if (value == 159) {
+                System.out.println("Naar achter");
+            } else if (value == 155) {
+                System.out.println("Naar links");
+            } else if (value == 149) {
+                System.out.println("Aan/uit");
+            } else if (value == 128) {
+                System.out.println("Laagste snelheid");
+            } else if (value == 129) {
+                System.out.println("Standaard snelheid");
+            } else if (value == 130) {
+                System.out.println("Volle snelheid");
+            }
         }
     }
 
@@ -57,8 +72,8 @@ private List<Updatable> updatableList = new ArrayList<>();
         //System.out.println(value);
     }
 
-    public void onLineSensorUpdate(int value){
-        System.out.println(value);
+    public void onLineSensorUpdate(int links,int rechts){
+
     }
 
     public void onBluetoothUpdate(int value) {

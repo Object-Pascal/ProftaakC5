@@ -41,8 +41,8 @@ public class Servos implements Updatable {
     public void accelerate() {
         if (!objectDetected) {
             for (int i = 0; i <= 25; i++) {
-                rightWheel.update(1500 + i);
-                leftWheel.update(1500 - i);
+                rightWheel.update(1500 - i);
+                leftWheel.update(1500 + i);
                 BoeBot.wait(5);
             }
         }
