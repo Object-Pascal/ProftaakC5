@@ -101,8 +101,10 @@ public class Servos implements Updatable {
     }
 
     public void moveBackwards(){
-        leftWheel.update(1525);
-        rightWheel.update(1475);
+        rightWheel.update(1525);
+        leftWheel.update(1475);
+        currentAccelerationSpeed = 0;
+        canAccelerate = false;
     }
 
     public void speed25(){
@@ -127,5 +129,18 @@ public class Servos implements Updatable {
     }
     public void speedRight(double indexright){
         rightWheel.update((int)(1500-(200*indexright)));
+    }
+    public void speed100(){
+        if(!objectDetected){
+            leftWheel.update(1400);
+            rightWheel.update(1600);
+        }
+    }
+
+    public void maxSpeed(){
+        if(!objectDetected){
+            leftWheel.update(1300);
+            rightWheel.update(1700);
+        }
     }
 }

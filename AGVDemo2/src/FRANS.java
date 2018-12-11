@@ -16,13 +16,14 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
     private Updatable  linesensor = new LineSensor(this,0,1,2);
 
 private List<Updatable> updatableList = new ArrayList<>();
+private boolean on;
 
     public FRANS(){
         //this.updatableList.add(ultrasone);
         this.updatableList.add(servos);
         this.updatableList.add(infrared);
         this.updatableList.add(bluetooth);
-        //this.updatableList.add(linesensor);
+        this.updatableList.add(linesensor);
 
     }
 
@@ -48,26 +49,39 @@ private List<Updatable> updatableList = new ArrayList<>();
     }
 
     public void onInfraredUpdate(int value) {
-        if (value < 999) {
-            if (value == 158) {
-                System.out.println("Naar voren");
-            } else if (value == 154) {
-                System.out.println("Naar rechts");
-            } else if (value == 159) {
-                System.out.println("Naar achter");
-            } else if (value == 155) {
-                System.out.println("Naar links");
-            } else if (value == 149) {
-                System.out.println("Aan/uit");
-            } else if (value == 128) {
-                System.out.println("Laagste snelheid");
-            } else if (value == 129) {
-                System.out.println("Standaard snelheid");
-            } else if (value == 130) {
-                System.out.println("Volle snelheid");
+            if (value < 999) {
+                if (value == 158) {
+                    System.out.println("Naar voren");
+                    ((Servos) servos).accelerate();
+                } else if (value == 154) {
+                    System.out.println("Naar rechts");
+                    ((Servos) servos).spinRight();
+                } else if (value == 159) {
+                    System.out.println("Naar achter");
+                    ((Servos) servos).moveBackwards();
+                } else if (value == 155) {
+                    System.out.println("Naar links");
+                    ((Servos) servos).spinLeft();
+                } else if (value == 149) {
+                    System.out.println("Aan/uit");
+                    if (on) {
+                        ((Servos) servos).accelerate();
+                    } else {
+                        ((Servos) servos).stopBot();
+                    }
+                } else if (value == 128) {
+                    System.out.println("Laagste snelheid");
+                    ((Servos) servos).speed25();
+                } else if (value == 129) {
+                    System.out.println("Standaard snelheid");
+                    ((Servos) servos).speed100();
+                } else if (value == 130) {
+                    System.out.println("Volle snelheid");
+                    ((Servos) servos).maxSpeed();
+                }
             }
         }
-    }
+
 
     public void onServosUpdate(int value){
         //System.out.println(value);
