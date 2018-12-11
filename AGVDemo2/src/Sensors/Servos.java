@@ -5,6 +5,7 @@ import Interfaces.ServosUpdate;
 import Interfaces.Updatable;
 import TI.BoeBot;
 import TI.Servo;
+import TI.Timer;
 
 public class Servos implements Updatable {
 
@@ -17,15 +18,36 @@ public class Servos implements Updatable {
     public boolean objectDetected;
     public DirectionType currenctDirection;
 
+    private Timer accelerationTimer;
+    private int currentAccelerationSpeed;
+    private boolean canAccelerate;
+
 
     public Servos(ServosUpdate observer){
         this.observer = observer;
         this.currentSpeed = 0;
         this.objectDetected = false;
+        this.accelerationTimer = new Timer(100);
+        this.canAccelerate = false;
         this.currenctDirection = DirectionType.Stopped;
     }
 
     public void update(){
+        if (canAccelerate) {
+            int addedSpeed = 5;
+            if (accelerationTimer.timeout()) {
+                if (currentAccelerationSpeed < 200) {
+                    rightWheel.update(1500 - currentAccelerationSpeed);
+                    leftWheel.update(1500 + currentAccelerationSpeed);
+                    currentAccelerationSpeed += addedSpeed;
+                    System.out.println("tick");
+                } else {
+                    System.out.println("Max speed");
+                    canAccelerate = false;
+                }
+            }
+        }
+
         observer.onServosUpdate(this.currentSpeed);
     }
 
@@ -36,15 +58,13 @@ public class Servos implements Updatable {
     public void stopBot(){
         leftWheel.update(1500);
         rightWheel.update(1500);
+        currentAccelerationSpeed = 0;
+        canAccelerate = false;
     }
 
     public void accelerate() {
         if (!objectDetected) {
-            for (int i = 0; i <= 25; i++) {
-                rightWheel.update(1500 - i);
-                leftWheel.update(1500 + i);
-                BoeBot.wait(5);
-            }
+            canAccelerate = true;
         }
     }
 

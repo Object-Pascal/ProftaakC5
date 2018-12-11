@@ -8,16 +8,27 @@ public class Infrared implements Updatable {
 
     private InfraredUpdate observer;
     private int pin;
+    private boolean onOff;
 
 
     public Infrared(InfraredUpdate observer,int pin) {
         this.observer = observer;
         this.pin = pin;
+        this.onOff = false;
     }
 
     public void update() {
         observer.onInfraredUpdate(getSignal());
 
+    }
+
+    public boolean getOnOff(){
+        //return this.onOff;
+        return true;
+    }
+
+    public void turnOnOff(){
+        this.onOff = !onOff;
     }
 
     public int getSignal() {
