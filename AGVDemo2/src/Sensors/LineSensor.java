@@ -13,6 +13,7 @@ public class LineSensor implements Updatable {
     private int pin3;
     private Timer timer = new Timer(10);
 
+
     public LineSensor(LineSensorUpdate observer, int pin1,int pin2,int pin3) {
         this.observer = observer;
         this.pin1 = pin1;

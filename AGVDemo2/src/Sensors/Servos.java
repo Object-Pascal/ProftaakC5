@@ -29,7 +29,7 @@ public class Servos implements Updatable {
         this.objectDetected = false;
         this.accelerationTimer = new Timer(100);
         this.canAccelerate = false;
-        this.currenctDirection = DirectionType.Stopped;
+        this.currenctDirection = DirectionType.Forward;
     }
 
     public void update(){

@@ -4,6 +4,7 @@ import Sensors.*;
 import TI.BoeBot;
 import com.sun.xml.internal.ws.developer.SerializationFeature;
 
+import javax.xml.soap.SAAJResult;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +16,12 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
     private Updatable bluetooth = new Bluetooth(this);
     private Updatable  linesensor = new LineSensor(this,0,1,2);
 
+
 private List<Updatable> updatableList = new ArrayList<>();
-private boolean on;
+private boolean on=true;
 
     public FRANS(){
-        //this.updatableList.add(ultrasone);
+        this.updatableList.add(ultrasone);
         this.updatableList.add(servos);
         this.updatableList.add(infrared);
         this.updatableList.add(bluetooth);
@@ -28,14 +30,27 @@ private boolean on;
     }
 
 
-    public void update(){
-        for (Updatable x:updatableList) {
-            x.update();
+    public void update() {
+        while (true) {
+            while (on) {
+                for (Updatable x : updatableList) {
+                    x.update();
+                }
+                if (!on) {
+                    updatableList.remove(linesensor);
+                    break;
+                }
+            }
+            for (Updatable x : updatableList) {
+                x.update();
+            }
+            if (on) {
+                updatableList.add(linesensor);
+            }
         }
     }
 
     public void onUltrasoneUpdate(int value) {
-        System.out.println(value);
         if (value <= 10) {
             if (((Servos)servos).currenctDirection == DirectionType.Forward) {
                 ((Servos)servos).stopBot();
@@ -79,6 +94,18 @@ private boolean on;
                     System.out.println("Volle snelheid");
                     ((Servos) servos).maxSpeed();
                 }
+                else if(value == 137) {
+                    if(this.on){
+                        System.out.println("linesensor off");
+                        this.on = false;
+                        ((Servos) servos).stopBot();
+                    }
+                    else{
+                        System.out.println("linesensor on");
+                        this.on = true;
+                        ((Servos) servos).stopBot();
+                    }
+                }
             }
         }
 
@@ -87,23 +114,23 @@ private boolean on;
         //System.out.println(value);
     }
 
-    public void onLineSensorUpdate(double left,double right){
-        if(left>0.8 && right>0.8) {
+    public void onLineSensorUpdate(double left,double right) {
+        if (!((Servos) servos).objectDetected) {
+            if (left > 0.8 && right > 0.8) {
+                ((Servos) servos).speedLeft(right);
+                ((Servos) servos).speedRight(left);
+            } else if (left > 0.95) {
+                ((Servos) servos).speedLeft(0);
+                return;
+            } else if (right > 0.95) {
+                ((Servos) servos).speedRight(0);
+                return;
+            }
+
+
             ((Servos) servos).speedLeft(right);
             ((Servos) servos).speedRight(left);
         }
-        else if(left>0.95){
-            ((Servos) servos).speedLeft(0);
-            return;
-        }
-        else if(right>0.95){
-            ((Servos) servos).speedRight(0);
-            return;
-        }
-
-
-        ((Servos) servos).speedLeft(right);
-        ((Servos) servos).speedRight(left);
     }
 
     public void onBluetoothUpdate(int value) {
@@ -138,6 +165,14 @@ private boolean on;
                 ((Servos)servos).stopBot();
                 break;
 
+            case 32:
+                if(this.on) {
+                    this.on = false;
+                }else{
+                    this.on = true;
+                }
+                break;
+                
             default:
                 //((Servos)servos).stopBot();
                 break;
