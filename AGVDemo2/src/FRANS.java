@@ -11,7 +11,7 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
     private Updatable servos = new Servos(this);
     private Updatable infrared = new Infrared(this,15);
     private Updatable bluetooth = new Bluetooth(this);
-    private Updatable  linesensor = new LineSensor(this,0,1,2);
+    private Updatable linesensor = new LineSensorControl(this,0,1,2);
     private Updatable ledControl = new LedControl(this);
 
 
