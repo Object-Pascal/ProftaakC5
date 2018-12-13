@@ -1,20 +1,18 @@
 import Enums.DirectionType;
 import Interfaces.*;
 import Sensors.*;
-import TI.BoeBot;
-import com.sun.xml.internal.ws.developer.SerializationFeature;
 
-import javax.xml.soap.SAAJResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, LineSensorUpdate, BluetoothUpdate {
+public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, LineSensorUpdate, BluetoothUpdate, LedControlUpdate {
 
     private Updatable ultrasone = new Ultrasone(this);
     private Updatable servos = new Servos(this);
     private Updatable infrared = new Infrared(this,15);
     private Updatable bluetooth = new Bluetooth(this);
     private Updatable  linesensor = new LineSensor(this,0,1,2);
+    private Updatable ledControl = new LedControl(this);
 
 
 private List<Updatable> updatableList = new ArrayList<>();
@@ -26,7 +24,6 @@ private boolean on=true;
         this.updatableList.add(infrared);
         this.updatableList.add(bluetooth);
         this.updatableList.add(linesensor);
-
     }
 
 
@@ -52,6 +49,7 @@ private boolean on=true;
 
     public void onUltrasoneUpdate(int value) {
         if (value <= 10) {
+            ((LedControl) ledControl).alarmLights();
             if (((Servos)servos).currenctDirection == DirectionType.Forward) {
                 ((Servos)servos).stopBot();
                 ((Servos)servos).objectDetected = true;
@@ -59,19 +57,22 @@ private boolean on=true;
             }
         }
         else if (value != 40) {
+            ((LedControl) ledControl).setLedsOff();
             ((Servos)servos).objectDetected = false;
         }
     }
 
     public void onInfraredUpdate(int value) {
-            if (value < 999) {
+        if (value < 999) {
                 if (value == 158) {
+                    ((Servos)servos).currenctDirection = DirectionType.Forward;
                     System.out.println("Naar voren");
                     ((Servos) servos).accelerate();
                 } else if (value == 154) {
                     System.out.println("Naar rechts");
                     ((Servos) servos).spinRight();
                 } else if (value == 159) {
+                    ((Servos)servos).currenctDirection = DirectionType.Backward;
                     System.out.println("Naar achter");
                     ((Servos) servos).moveBackwards();
                 } else if (value == 155) {
@@ -96,6 +97,7 @@ private boolean on=true;
                 }
                 else if(value == 137) {
                     if(this.on){
+
                         System.out.println("linesensor off");
                         this.on = false;
                         ((Servos) servos).stopBot();
@@ -103,8 +105,7 @@ private boolean on=true;
                     else{
                         System.out.println("linesensor on");
                         this.on = true;
-                        ((Servos) servos).stopBot();
-                    }
+                        ((Servos) servos).stopBot();                   }
                 }
             }
         }
@@ -115,9 +116,11 @@ private boolean on=true;
     }
 
     public void onLineSensorUpdate(double left,double right) {
+        ((Servos)servos).currenctDirection = DirectionType.Forward;
         if (!((Servos) servos).objectDetected) {
             if (left > 0.8 && right > 0.8) {
-                ((Servos) servos).speedLeft(right);
+                ((LedControl) ledControl).intersectionBlink();
+                 ((Servos) servos).speedLeft(right);
                 ((Servos) servos).speedRight(left);
             } else if (left > 0.95) {
                 ((Servos) servos).speedLeft(0);
@@ -177,5 +180,8 @@ private boolean on=true;
                 //((Servos)servos).stopBot();
                 break;
         }
+    }
+    public void onLedControlUpdate(){
+
     }
 }

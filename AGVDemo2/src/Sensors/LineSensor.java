@@ -32,7 +32,7 @@ public class LineSensor implements Updatable {
             delta right: 1613 - 1017 = 596.
              */
 
-            System.out.println("1: " + left + " | 3: " + right);
+            //System.out.println("1: " + left + " | 3: " + right);
             observer.onLineSensorUpdate(left,right);
         }
     }

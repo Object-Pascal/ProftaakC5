@@ -10,10 +10,11 @@ import java.util.Random;
 public class Ultrasone implements Updatable {
 
     private UltrasoneUpdate observer;
-    private Timer timer = new Timer(200);
+    private Timer timer;
 
     public Ultrasone(UltrasoneUpdate observer) {
         this.observer = observer;
+        this.timer = new Timer(100);
     }
 
     @Override
