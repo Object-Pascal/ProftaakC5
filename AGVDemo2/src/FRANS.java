@@ -1,9 +1,13 @@
 import Enums.DirectionType;
+import Enums.LinesensorState;
 import Interfaces.*;
 import Sensors.*;
+import TI.BoeBot;
+import TI.Timer;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, LineSensorUpdate, BluetoothUpdate, LedControlUpdate {
 
@@ -14,11 +18,16 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
     private Updatable  linesensor = new LineSensor(this,0,1,2);
     private Updatable ledControl = new LedControl(this);
 
+    private LinesensorState linesensorState;
+    private Timer linesensorStateTimer = new Timer(700);
+
 
 private List<Updatable> updatableList = new ArrayList<>();
 private boolean on=true;
 
     public FRANS(){
+        linesensorState = LinesensorState.Following;
+
         this.updatableList.add(ultrasone);
         this.updatableList.add(servos);
         this.updatableList.add(infrared);
@@ -115,26 +124,42 @@ private boolean on=true;
         //System.out.println(value);
     }
 
-    public void onLineSensorUpdate(double left,double right) {
-        ((Servos)servos).currenctDirection = DirectionType.Forward;
-        if (!((Servos) servos).objectDetected) {
-            if (left > 0.8 && right > 0.8) {
+    public void onLineSensorUpdate(double left,double right,double center) {
+
+        if(linesensorStateTimer.timeout()){
+            linesensorState = LinesensorState.Following;
+        }
+        ((Servos) servos).currenctDirection = DirectionType.Forward;
+
+
+        if (!((Servos) servos).objectDetected && linesensorState == LinesensorState.Following) {
+
+
+            if (left > 0.6 && right > 0.6) { //intersectie punt
                 ((LedControl) ledControl).intersectionBlink();
-                 ((Servos) servos).speedLeft(right);
-                ((Servos) servos).speedRight(left);
-            } else if (left > 0.95) {
+                ((Servos) servos).stopBot();
+
+                BoeBot.wait(0,100);
+                ((Servos) servos).sharpTurnLeft();
+               // BoeBot.wait(2,0);
+                linesensorState = LinesensorState.Idle;
+                linesensorStateTimer.mark();
+                return;
+//                 ((Servos) servos).speedLeft(right);
+//                ((Servos) servos).speedRight(left);
+            } else if (left > 0.92) {
                 ((Servos) servos).speedLeft(0);
                 return;
-            } else if (right > 0.95) {
+            } else if (right > 0.92) {
                 ((Servos) servos).speedRight(0);
                 return;
             }
-
-
-            ((Servos) servos).speedLeft(right);
-            ((Servos) servos).speedRight(left);
+            ((Servos) servos).speedLeft(right + 0.15);
+            ((Servos) servos).speedRight(left + 0.15);
+            ((LedControl) ledControl).setLedsOff();
         }
     }
+
 
     public void onBluetoothUpdate(int value) {
         switch (value) {
@@ -182,6 +207,8 @@ private boolean on=true;
         }
     }
     public void onLedControlUpdate(){
-
     }
 }
+
+
+

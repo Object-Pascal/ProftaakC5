@@ -143,4 +143,11 @@ public class Servos implements Updatable {
             rightWheel.update(1700);
         }
     }
+
+    public void sharpTurnLeft(){
+        if(!objectDetected){
+            leftWheel.update(1550);
+            rightWheel.update(1550);
+        }
+    }
 }

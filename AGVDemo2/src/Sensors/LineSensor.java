@@ -25,15 +25,22 @@ public class LineSensor implements Updatable {
         if (timer.timeout()) {
             double right = (BoeBot.analogRead(pin1)-1017)/(double)596;
             double left = ((BoeBot.analogRead(pin2)-900)/(double)676);
+            double center = BoeBot.analogRead(pin3);
+
             /*
-            gekalibreerd:
+            gekalibreerd tafel bij bart:
             delta left: 1576 - 900 = 676.
             delta center: 1603 - 857 = 746.
             delta right: 1613 - 1017 = 596.
              */
 
-            //System.out.println("1: " + left + " | 3: " + right);
-            observer.onLineSensorUpdate(left,right);
+            /*
+            center: >750 = zwart
+             */
+
+            System.out.println("1: " + left + " | " + center + " | 3: " + right);
+
+            observer.onLineSensorUpdate(left,right,center);
         }
     }
 }

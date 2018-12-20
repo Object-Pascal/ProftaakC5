@@ -72,13 +72,9 @@ private Timer timer;
         }
 
         public void intersectionBlink(){
-            BoeBot.rgbSet(0, 0,0,100);
-            BoeBot.rgbSet(1, 0,0,100);
-            BoeBot.rgbSet(2, 0,0,100);
-            BoeBot.rgbShow();
-            BoeBot.rgbSet(0, 0,0,0);
-            BoeBot.rgbSet(1, 0,0,0);
-            BoeBot.rgbSet(2, 0,0,0);
+            BoeBot.rgbSet(0, 0,0,50);
+            BoeBot.rgbSet(1, 0,0,50);
+            BoeBot.rgbSet(2, 0,0,50);
             BoeBot.rgbShow();
         }
 
