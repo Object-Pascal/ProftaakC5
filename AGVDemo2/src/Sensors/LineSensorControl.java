@@ -5,7 +5,7 @@ import Interfaces.Updatable;
 import TI.BoeBot;
 import TI.Timer;
 
-public class LineSensor implements Updatable {
+public class LineSensorControl implements Updatable {
 
     private LineSensorUpdate observer;
     private int pin1;
@@ -14,7 +14,7 @@ public class LineSensor implements Updatable {
     private Timer timer = new Timer(10);
 
 
-    public LineSensor(LineSensorUpdate observer, int pin1,int pin2,int pin3) {
+    public LineSensorControl(LineSensorUpdate observer, int pin1,int pin2,int pin3) {
         this.observer = observer;
         this.pin1 = pin1;
         this.pin2 = pin2;
