@@ -17,14 +17,15 @@ public class ServoControl implements Updatable {
     public boolean objectDetected;
     public DirectionType currenctDirection;
 
-    private Timer accelerationTimer;
+    private Timer movementTimer;
     private int currentAccelerationSpeed;
     private boolean canAccelerate;
+    private boolean canStop;
 
 
     public ServoControl(ServosUpdate observer){
         this.observer = observer;
-        this.accelerationTimer = new Timer(100);
+        this.movementTimer = new Timer(100);
 
         this.currentSpeed = 0;
         this.objectDetected = false;
@@ -37,16 +38,38 @@ public class ServoControl implements Updatable {
 
     public void update(){
         if (canAccelerate) {
-            int addedSpeed = 5;
-            if (accelerationTimer.timeout()) {
-                if (currentAccelerationSpeed < 200) {
+            int increment = 2;
+            if (movementTimer.timeout()) {
+                if (currentAccelerationSpeed < 75) {
                     rightWheel.setSpeed(1500 - currentAccelerationSpeed);
                     leftWheel.setSpeed(1500 + currentAccelerationSpeed);
-                    currentAccelerationSpeed += addedSpeed;
-                    System.out.println("tick");
+                    currentAccelerationSpeed += increment;
+                    System.out.println("speed : " + currentAccelerationSpeed);
                 } else {
-                    System.out.println("Max speed");
+                    System.out.println("Accelerated");
                     canAccelerate = false;
+                }
+            }
+        }
+
+        if (canStop) {
+            int increment = 2;
+            if (movementTimer.timeout()) {
+                if (currentAccelerationSpeed > 0) {
+                    if (currenctDirection == DirectionType.Forward) {
+                        rightWheel.setSpeed(1500 - (currentAccelerationSpeed + increment));
+                        leftWheel.setSpeed(1500 + (currentAccelerationSpeed - increment));
+                    }
+                    else if (currenctDirection == DirectionType.Backward) {
+                        rightWheel.setSpeed(1500 + (currentAccelerationSpeed + increment));
+                        leftWheel.setSpeed(1500 - (currentAccelerationSpeed - increment));
+                    }
+                    currentAccelerationSpeed -= increment;
+                    System.out.println("speed : " + currentAccelerationSpeed);
+                } else {
+                    System.out.println("Stopped");
+                    currentAccelerationSpeed = 0;
+                    canStop = false;
                 }
             }
         }
@@ -54,16 +77,24 @@ public class ServoControl implements Updatable {
         observer.onServosUpdate(this.currentSpeed);
     }
 
-    public void stopBot(){
-        leftWheel.setSpeed(1500);
-        rightWheel.setSpeed(1500);
-        currentAccelerationSpeed = 0;
-        canAccelerate = false;
+    public void stopBot(boolean instant){
+        if (instant) {
+            leftWheel.setSpeed(1500);
+            rightWheel.setSpeed(1500);
+            currentAccelerationSpeed = 0;
+        }
+        else {
+            if (!objectDetected && currentAccelerationSpeed > 0) {
+                canAccelerate = false;
+                canStop = true;
+            }
+        }
     }
 
     public void accelerate() {
         if (!objectDetected) {
             canAccelerate = true;
+            canStop = false;
         }
     }
 
@@ -123,10 +154,10 @@ public class ServoControl implements Updatable {
         rightWheel.setSpeed((int)(1500-(200*indexright)));
     }
 
-    public void maxSpeed(){
+    public void setSpeedIncrement(int speed) {
         if(!objectDetected){
-            leftWheel.setSpeed(1300);
-            rightWheel.setSpeed(1700);
+            leftWheel.setSpeed(1500 + speed);
+            rightWheel.setSpeed(1500 - speed);
         }
     }
 }

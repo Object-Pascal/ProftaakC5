@@ -50,7 +50,7 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
         if (value <= 10) {
             ((LedControl) ledControl).alarmLights();
             if (((ServoControl)servos).currenctDirection == DirectionType.Forward) {
-                ((ServoControl)servos).stopBot();
+                ((ServoControl)servos).stopBot(true);
                 ((ServoControl)servos).objectDetected = true;
                 System.out.println("Object detected");
             }
@@ -82,29 +82,29 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
                 if (on) {
                     ((ServoControl) servos).accelerate();
                 } else {
-                    ((ServoControl) servos).stopBot();
+                    ((ServoControl) servos).stopBot(false);
                 }
             } else if (value == 128) {
                 System.out.println("Laagste snelheid");
-                //((ServoControl) servos).speed25();
+                ((ServoControl) servos).setSpeedIncrement(25);
             } else if (value == 129) {
                 System.out.println("Standaard snelheid");
-                //((ServoControl) servos).speed100();
+                ((ServoControl) servos).setSpeedIncrement(100);
             } else if (value == 130) {
                 System.out.println("Volle snelheid");
-                ((ServoControl) servos).maxSpeed();
+                ((ServoControl) servos).setSpeedIncrement(200);
             }
             else if(value == 137) {
                 if(this.on){
 
                     System.out.println("linesensor off");
                     this.on = false;
-                    ((ServoControl) servos).stopBot();
+                    ((ServoControl) servos).stopBot(false);
                 }
                 else{
                     System.out.println("linesensor on");
                     this.on = true;
-                    ((ServoControl) servos).stopBot();
+                    ((ServoControl) servos).stopBot(false);
                 }
             }
         }
@@ -159,16 +159,16 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
             case 102:
                 ((ServoControl)servos).currenctDirection = DirectionType.Stopped;
                 System.out.println("Stop");
-                ((ServoControl)servos).stopBot();
+                ((ServoControl)servos).stopBot(false);
                 break;
 
             case 32:
                 if(this.on) {
                     this.on = false;
-                    ((ServoControl)servos).stopBot();
+                    ((ServoControl)servos).stopBot(false);
                 }else{
                     this.on = true;
-                    ((ServoControl)servos).stopBot();
+                    ((ServoControl)servos).stopBot(false);
                 }
                 break;
                 
