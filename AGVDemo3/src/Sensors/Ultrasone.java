@@ -1,30 +1,21 @@
 package Sensors;
 
-import Interfaces.UltrasoneUpdate;
-import Interfaces.Updatable;
 import TI.BoeBot;
-import TI.Timer;
 
-import java.util.Random;
+public class Ultrasone {
+    private int pinIn;
+    private int pinOut;
 
-public class Ultrasone implements Updatable {
-
-    private UltrasoneUpdate observer;
-    private Timer timer;
-
-    public Ultrasone(UltrasoneUpdate observer) {
-        this.observer = observer;
-        this.timer = new Timer(100);
+    public Ultrasone(int pinIn, int pinOut) {
+        this.pinIn = pinIn;
+        this.pinOut = pinOut;
     }
+    public int echoLocation() {
+        BoeBot.digitalWrite(pinOut, true);
+        BoeBot.wait(0, 800);
+        BoeBot.digitalWrite(pinOut, false);
 
-    @Override
-    public void update() {
-        if (timer.timeout()) {
-            BoeBot.digitalWrite(5, true);
-            BoeBot.wait(0, 800);
-            BoeBot.digitalWrite(5, false);
-            int value = BoeBot.pulseIn(6, true, 10000) / 58;
-            this.observer.onUltrasoneUpdate(value == 0 ? 40 : value);
-        }
+        int value = (BoeBot.pulseIn(pinIn, true, 10000) / 58);
+        return value == 0 ? 40 : value;
     }
 }

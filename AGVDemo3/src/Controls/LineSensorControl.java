@@ -1,30 +1,32 @@
-package Sensors;
+package Controls;
 
+import Sensors.LineSensor;
 import Interfaces.LineSensorUpdate;
 import Interfaces.Updatable;
-import TI.BoeBot;
 import TI.Timer;
 
 public class LineSensorControl implements Updatable {
 
     private LineSensorUpdate observer;
-    private int pin1;
-    private int pin2;
-    private int pin3;
+
+    private LineSensor sensorLeft;
+    private LineSensor sensorRight;
+    private LineSensor sensorCenter;
+
     private Timer timer = new Timer(10);
 
-
-    public LineSensorControl(LineSensorUpdate observer, int pin1,int pin2,int pin3) {
+    public LineSensorControl(LineSensorUpdate observer, int pinRight,int pinLeft,int pinCenter) {
         this.observer = observer;
-        this.pin1 = pin1;
-        this.pin2 = pin2;
-        this.pin3 = pin3;
+        sensorRight = new LineSensor(pinRight);
+        sensorLeft = new LineSensor(pinLeft);
+        sensorCenter = new LineSensor(pinCenter);
     }
 
     public void update() {
         if (timer.timeout()) {
-            double right = (BoeBot.analogRead(pin1)-1017)/(double)596;
-            double left = ((BoeBot.analogRead(pin2)-900)/(double)676);
+            double right = (sensorRight.readValue() - 1017) / (double)596;
+            double left = (sensorLeft.readValue() - 900) / (double)676;
+
             /*
             gekalibreerd:
             delta left: 1576 - 900 = 676.
