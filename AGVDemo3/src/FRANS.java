@@ -165,8 +165,10 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
             case 32:
                 if(this.on) {
                     this.on = false;
+                    ((ServoControl)servos).stopBot();
                 }else{
                     this.on = true;
+                    ((ServoControl)servos).stopBot();
                 }
                 break;
                 

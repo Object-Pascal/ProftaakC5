@@ -13,6 +13,7 @@ public class Bluetooth {
         if (conn.available() > 0) {
             return conn.readByte();
         }
+        return 0;
     }
 
     public boolean connectionAvailable() {
