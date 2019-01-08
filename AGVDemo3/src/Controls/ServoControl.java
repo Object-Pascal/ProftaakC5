@@ -160,4 +160,11 @@ public class ServoControl implements Updatable {
             rightWheel.setSpeed(1500 - speed);
         }
     }
+
+    public void sharpTurnLeft(){
+        if(!objectDetected){
+            leftWheel.setSpeed(1550);
+            rightWheel.setSpeed(1550);
+        }
+    }
 }

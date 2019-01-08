@@ -1,6 +1,10 @@
 import Enums.DirectionType;
+import Enums.LinesensorState;
 import Interfaces.*;
 import Controls.*;
+import TI.BoeBot;
+import TI.Timer;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +18,13 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
     private Updatable linesensor = new LineSensorControl(this,0,1,2);
     private Updatable ledControl = new LedControl(this);
 
+    private LinesensorState linesensorState;
+    private Timer linesensorStateTimer = new Timer(700);
+
     private List<Updatable> updatableList = new ArrayList<>();
     private boolean on = true;
+    private boolean routeInitialized = false;
+    private ArrayList<Integer> routeArray;
 
     public FRANS(){
         this.updatableList.add(ultrasone);
@@ -23,6 +32,7 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
         this.updatableList.add(infrared);
         this.updatableList.add(bluetooth);
         this.updatableList.add(linesensor);
+        this.routeArray = new ArrayList<>();
     }
 
 
@@ -111,22 +121,30 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
     }
 
     public void onLineSensorUpdate(double left,double right) {
-        ((ServoControl)servos).currenctDirection = DirectionType.Forward;
-        if (!((ServoControl) servos).objectDetected) {
-            if (left > 0.8 && right > 0.8) {
-                ((LedControl) ledControl).intersectionBlink();
-                ((ServoControl) servos).speedLeft(right);
-                ((ServoControl) servos).speedRight(left);
-            } else if (left > 0.95) {
+        if(linesensorStateTimer.timeout()){
+            linesensorState = LinesensorState.Following;
+        }
+        ((ServoControl) servos).currenctDirection = DirectionType.Forward;
+        if (!((ServoControl) servos).objectDetected && linesensorState == LinesensorState.Following) {
+            if (left > 0.6 && right > 0.6) { //intersectie punt
+                if(routeInitialized){
+
+
+                }
+
+                return;
+//                 ((Servos) servos).speedLeft(right);
+//                ((Servos) servos).speedRight(left);
+            } else if (left > 0.90) {
                 ((ServoControl) servos).speedLeft(0);
                 return;
-            } else if (right > 0.95) {
+            } else if (right > 0.90) {
                 ((ServoControl) servos).speedRight(0);
                 return;
             }
-
-            ((ServoControl) servos).speedLeft(right);
-            ((ServoControl) servos).speedRight(left);
+            ((ServoControl) servos).speedLeft(right + 0.2);
+            ((ServoControl) servos).speedRight(left + 0.2);
+            ((LedControl) ledControl).setLedsOff();
         }
     }
 
@@ -171,9 +189,19 @@ public class FRANS implements UltrasoneUpdate, InfraredUpdate, ServosUpdate, Lin
                     ((ServoControl)servos).stopBot(false);
                 }
                 break;
-                
+
             default:
-                //((Servos)servos).stopBot();
+//                System.out.println(value);
+                this.routeInitialized = true;
+
+                this.routeArray.add(value);
+                System.out.println(routeArray);
+//                String valueToString = Integer.toString(value);
+//                for (int i = 0; i < Integer.toString(value).length() ; i += 3) {
+//                    String tempString = valueToString.charAt(i) +valueToString.charAt(i+1)+ valueToString.charAt(i+2) + "";
+//                        routeArray.add(Integer.parseInt(tempString));
+//                    //System.out.println(tempString);
+//                }
                 break;
         }
     }
